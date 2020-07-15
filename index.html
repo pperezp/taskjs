@@ -6,9 +6,110 @@
         <title></title>
     </head>
     <body>
+
+        <div id="tasks">
+            <div id="sons1">
+                <div id="task1">
+                    <input id="add1" type="button" value="Add" onclick="addSonTag(1)">
+                    <input id="rootTask1" type="text" style="margin-left: 0px" onfocusout="change(1)">
+                </div>
+            </div>
+        </div>
+
         <script src="js/Util.js"></script>
         <script src="js/Task.js"></script>
         <script src="js/Board.js"></script>
         <script src="js/Test.js"></script>
+        <script src="js/Direction.js"></script>
+        <script src="js/Css.js"></script>
+        <script src="js/KeyListener.js"></script>
+
+        <script>
+            let keyListener = new KeyListener();
+            keyListener.addInputTextId("rootTask1");
+
+            var id = 2;
+
+            function addSonTag(rootTaskId){
+                let rootTask = document.querySelector("#rootTask"+rootTaskId);
+                let marginLeft = parseInt(rootTask.style.marginLeft);
+
+                marginLeft += 50;
+
+                let sonsDiv = document.createElement("div");
+                let taskDiv = document.createElement("div");
+
+                let input = document.createElement("input");
+                let button = document.createElement("input");
+
+                sonsDiv.setAttribute("id", "sons"+id);
+                taskDiv.setAttribute("id", "task"+id);
+
+                input.setAttribute("id", "rootTask"+id);
+                input.setAttribute("type", "text");
+                input.setAttribute("style", "margin-left: "+marginLeft+"px");
+                
+                button.setAttribute("id", "add"+id);
+                button.setAttribute("type", "button");
+                button.setAttribute("value", "Add");
+                button.setAttribute("onclick", "addSonTag("+id+")");
+
+                sonsDiv.appendChild(taskDiv);
+                taskDiv.appendChild(button);
+                taskDiv.appendChild(input);
+                
+                document.querySelector("#sons"+rootTaskId).append(sonsDiv);
+
+                id++;
+            }
+
+            function change(rootTaskId){
+                let rootTask = document.querySelector("#rootTask"+rootTaskId);
+                let task = document.querySelector("#task"+rootTaskId);
+                let add = document.querySelector("#add"+rootTaskId);
+
+                let value = rootTask.value;
+                let marginLeft = rootTask.style.marginLeft;
+
+                task.removeChild(rootTask);
+                task.removeChild(add);
+
+                let span = document.createElement("span");
+
+                span.setAttribute("id", "rootTask"+rootTaskId);
+                span.setAttribute("onclick", "enable("+rootTaskId+")");
+                span.style.marginLeft = marginLeft;
+                span.innerHTML = value;
+
+                task.appendChild(add);
+                task.appendChild(span);
+
+                span.blur();
+            }
+
+            function enable(rootTaskId){
+                let rootTask = document.querySelector("#rootTask"+rootTaskId);
+                let task = document.querySelector("#task"+rootTaskId);
+                let add = document.querySelector("#add"+rootTaskId);
+
+                let value = rootTask.innerHTML;
+                let marginLeft = rootTask.style.marginLeft;
+
+                task.removeChild(rootTask);
+                task.removeChild(add);
+
+                let input = document.createElement("input");
+
+                input.setAttribute("id", "rootTask"+rootTaskId);
+                input.setAttribute("onfocusout", "change("+rootTaskId+")");
+                input.style.marginLeft = marginLeft;
+                input.value = value;
+
+                task.appendChild(add);
+                task.appendChild(input);
+                
+                input.focus();
+            }
+        </script>
     </body>
 </html>
